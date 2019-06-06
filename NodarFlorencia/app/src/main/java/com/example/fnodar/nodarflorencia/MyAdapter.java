@@ -24,6 +24,8 @@ public class MyAdapter  extends RecyclerView.Adapter<MyViewHolder> {
     public MyAdapter(List<Noticia> noticias,Handler handler) {
         this.noticias = noticias;
         this.handler = handler;
+        this.noticiasCopy = new ArrayList<>();
+        this.noticiasCopy.addAll(noticias);
     }
 
     @NonNull
@@ -37,8 +39,6 @@ public class MyAdapter  extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Noticia n = this.noticias.get(position);
-
-
         if(n.getImagenByte() == null && !n.getImagen().equalsIgnoreCase("")) {
             MyThread hd = new MyThread(n.getImagen(), ETipoDato.IMAGEN, this.handler, n, position);
             this.t1 = new Thread(hd);
@@ -70,5 +70,18 @@ public class MyAdapter  extends RecyclerView.Adapter<MyViewHolder> {
         this.noticias = n;
     }
 
-
+    public void filter(String text) {
+        this.noticias.clear();
+        if(text.isEmpty()){
+            this.noticias.addAll(this.noticiasCopy);
+        } else{
+            text = text.toLowerCase();
+            for(Noticia item: this.noticiasCopy){
+                if(item.getTitulo().toLowerCase().contains(text)){
+                    this.noticias.add(item);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
 }

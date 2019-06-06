@@ -2,11 +2,15 @@ package com.example.fnodar.nodarflorencia;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.fnodar.nodarflorencia.Helpers.ETipoDato;
 import com.example.fnodar.nodarflorencia.Helpers.PaserXML;
@@ -17,10 +21,8 @@ import com.example.fnodar.nodarflorencia.MyThread;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements Handler.Callback {
+public class MainActivity extends AppCompatActivity implements Handler.Callback, SearchView.OnQueryTextListener{
     private MyAdapter myAdapter;
-//    private Handler handler;
-  //  private String url;
     private List<Noticia> noticias = new ArrayList<>();
     private static MainActivity instance;
     private RecyclerView rvNoticias;
@@ -28,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     public static MainActivity getInstance() {
         return instance;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +50,47 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
         rvNoticias.setLayoutManager(layoutManager);
 
         instance = this;
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Noticias");
+
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu ,menu);
+        MenuItem mi = menu.findItem(R.id.opcion1);
+        SearchView sv = (android.support.v7.widget.SearchView) mi.getActionView();
+        sv.setOnQueryTextListener(this);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.opcion1) {
+            Log.d("Click menu", item.getTitle().toString());
+        } else if (item.getItemId() == android.R.id.home) {
+            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if(query.length() > 3 || query.equals(""))
+        this.myAdapter.filter(query);
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if(newText.length() > 3 || newText.equals(""))
+        this.myAdapter.filter(newText);
+
+        return false;
+    }
+
+
 
     @Override
     public boolean handleMessage(Message msg) {
