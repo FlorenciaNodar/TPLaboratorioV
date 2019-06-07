@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Noticias");
 
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.opcion1) {
+        if (item.getItemId() == R.id.opcion2) {
             Log.d("Click menu", item.getTitle().toString());
         } else if (item.getItemId() == android.R.id.home) {
             this.finish();
