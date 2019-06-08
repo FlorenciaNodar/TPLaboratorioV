@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.fnodar.nodarflorencia.Helpers.ETipoDato;
 import com.example.fnodar.nodarflorencia.Helpers.PaserXML;
 import com.example.fnodar.nodarflorencia.Models.Noticia;
+import com.example.fnodar.nodarflorencia.Models.NotifConfig;
 import com.example.fnodar.nodarflorencia.MyAdapter;
 import com.example.fnodar.nodarflorencia.MyThread;
 
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     private static MainActivity instance;
     private RecyclerView rvNoticias;
     Handler handler;
+    private String url;
+
     public static MainActivity getInstance() {
         return instance;
     }
@@ -68,7 +71,8 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.opcion2) {
-            Log.d("Click menu", item.getTitle().toString());
+            DialogConfig dc = new DialogConfig();
+            dc.show(getSupportFragmentManager(), "");
         } else if (item.getItemId() == android.R.id.home) {
             this.finish();
         }
@@ -107,4 +111,10 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     }
 
+    public void buscarNoticias(NotifConfig notiConfig) {
+        this.url = notiConfig.getUrl();
+        MyThread hd1 = new MyThread(this.handler,this.url, ETipoDato.TEXTO);
+        Thread t1 = new Thread(hd1);
+        t1.start();
+    }
 }
