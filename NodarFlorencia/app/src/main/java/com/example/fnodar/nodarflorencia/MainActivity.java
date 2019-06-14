@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Handler.Callback, SearchView.OnQueryTextListener{
-    private MyAdapter myAdapter;
+    public MyAdapter myAdapter ;
     private List<Noticia> noticias = new ArrayList<>();
     private static MainActivity instance;
     private RecyclerView rvNoticias;
@@ -37,9 +37,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         rvNoticias = super.findViewById(R.id.rv);
-
         handler = new Handler(this);
 
         MyThread m = new MyThread(handler, "http://www.telam.com.ar/rss2/deportes.xml", ETipoDato.TEXTO);
@@ -71,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.opcion2) {
+
             DialogConfig dc = new DialogConfig();
             dc.show(getSupportFragmentManager(), "");
         } else if (item.getItemId() == android.R.id.home) {
@@ -81,16 +80,22 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        if(query.length() > 3 || query.equals(""))
-        this.myAdapter.filter(query);
+        if(query.length() > 3 || query.equals("")) {
+
+            this.myAdapter.filter(query);
+        }
+
 
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if(newText.length() > 3 || newText.equals(""))
-        this.myAdapter.filter(newText);
+        if(newText.length() > 3 || newText.equals("")){
+
+            this.myAdapter.filter(newText);
+
+        }
 
         return false;
     }
@@ -100,9 +105,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
     @Override
     public boolean handleMessage(Message msg) {
         if(msg.arg1 == 1) {
+
             noticias = PaserXML.parserXml(msg.obj.toString());
-        myAdapter = new MyAdapter(noticias, handler);
-        rvNoticias.setAdapter(myAdapter);
+            myAdapter = new MyAdapter(noticias, handler);
+            rvNoticias.setAdapter(myAdapter);
+            myAdapter.setNoticias(noticias);
+            myAdapter.notifyDataSetChanged();
     } else if(msg.arg1 == 2) {
         this.myAdapter.notifyItemChanged((Integer)msg.obj);
     }
@@ -111,10 +119,13 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
 
     }
 
-    public void buscarNoticias(NotifConfig notiConfig) {
-        this.url = notiConfig.getUrl();
-        MyThread hd1 = new MyThread(this.handler,this.url, ETipoDato.TEXTO);
-        Thread t1 = new Thread(hd1);
-        t1.start();
+    public void buscarNoticias(List<String> notiConfig) {
+        for (int i = 0; i < notiConfig.size(); i++) {
+            this.url = notiConfig.get(i);
+            MyThread hd1 = new MyThread(this.handler,this.url, ETipoDato.TEXTO);
+            Thread t1 = new Thread(hd1);
+            t1.start();
+        }
+
     }
 }

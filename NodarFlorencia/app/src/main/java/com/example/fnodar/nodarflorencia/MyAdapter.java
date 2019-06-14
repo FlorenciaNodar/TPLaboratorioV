@@ -67,7 +67,11 @@ public class MyAdapter  extends RecyclerView.Adapter<MyViewHolder> {
     }
 
     public void setNoticias(List<Noticia> n) {
-        this.noticias = n;
+        this.noticias.addAll(n);
+    }
+
+    public void deleteNoticias(){
+        this.noticias.clear();
     }
 
     public void filter(String text) {

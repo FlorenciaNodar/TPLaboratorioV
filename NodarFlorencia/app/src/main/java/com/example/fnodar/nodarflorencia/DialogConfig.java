@@ -1,6 +1,8 @@
 package com.example.fnodar.nodarflorencia;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -26,7 +28,14 @@ public class DialogConfig extends DialogFragment {
         listTipoNoticias.add("Economia");
         listTipoNoticias.add("Politica");
         listTipoNoticias.add("Internacional");
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listTipoNoticias);
+        SharedPreferences prefs = this.getContext().getSharedPreferences("noticias_config", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = prefs.edit();
+        e.putBoolean("Deportes",false);
+        e.putBoolean("Economia",false);
+        e.putBoolean("Internacional",false);
+        e.putBoolean("Politica",false);
+        e.commit();
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, listTipoNoticias);
         this.listViewConfig.setAdapter(arrayAdapter);
         ListenerListDialog lld = new ListenerListDialog(this.listViewConfig);
         ListenerDialogConfig ldc = new ListenerDialogConfig(lld, getActivity());
