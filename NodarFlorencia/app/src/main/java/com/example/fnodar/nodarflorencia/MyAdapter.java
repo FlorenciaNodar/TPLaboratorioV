@@ -18,12 +18,14 @@ import java.util.List;
 public class MyAdapter  extends RecyclerView.Adapter<MyViewHolder> {
     private List<Noticia> noticias;
     private List<Noticia> noticiasCopy;
+    private MyOnItemClick listener;
     private Thread t1;
     private Handler handler;
 
-    public MyAdapter(List<Noticia> noticias,Handler handler) {
+    public MyAdapter(List<Noticia> noticias, MyOnItemClick listener,Handler handler) {
         this.noticias = noticias;
         this.handler = handler;
+        this.listener = listener;
         this.noticiasCopy = new ArrayList<>();
         this.noticiasCopy.addAll(noticias);
     }
@@ -32,7 +34,7 @@ public class MyAdapter  extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
-        MyViewHolder vh = new MyViewHolder(v);
+        MyViewHolder vh = new MyViewHolder(v,listener);
         return vh;
     }
 
@@ -88,4 +90,9 @@ public class MyAdapter  extends RecyclerView.Adapter<MyViewHolder> {
         }
         notifyDataSetChanged();
     }
+
+    public Thread getT1() {
+        return t1;
+    }
+
 }

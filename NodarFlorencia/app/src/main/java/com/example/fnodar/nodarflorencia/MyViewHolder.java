@@ -10,16 +10,18 @@ public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClic
     public TextView tituloNoticia;
     public TextView descripcionNoticia;
     public TextView fechaNoticia;
-
+    private MyOnItemClick listener;
     private String link;
 
-    public MyViewHolder(View itemView) {
+    public MyViewHolder(View itemView, MyOnItemClick listener) {
         super(itemView);
 
         this.imgNoticia = (ImageView) itemView.findViewById(R.id.imgNoticia);
         this.tituloNoticia = (TextView) itemView.findViewById(R.id.tituloNoticia);
         this.descripcionNoticia = (TextView) itemView.findViewById(R.id.descripcionNoticia);
         this.fechaNoticia = (TextView) itemView.findViewById(R.id.fechaNoticia);
+        itemView.setOnClickListener(this);
+        this.listener = listener;
     }
 
     public String getLink() {
@@ -32,5 +34,6 @@ public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        this.listener.onItemClick(link);
     }
 }

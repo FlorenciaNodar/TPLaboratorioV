@@ -1,5 +1,6 @@
 package com.example.fnodar.nodarflorencia;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
@@ -15,14 +16,10 @@ import android.view.MenuItem;
 import com.example.fnodar.nodarflorencia.Helpers.ETipoDato;
 import com.example.fnodar.nodarflorencia.Helpers.PaserXML;
 import com.example.fnodar.nodarflorencia.Models.Noticia;
-import com.example.fnodar.nodarflorencia.Models.NotifConfig;
-import com.example.fnodar.nodarflorencia.MyAdapter;
-import com.example.fnodar.nodarflorencia.MyThread;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements Handler.Callback, SearchView.OnQueryTextListener{
+public class MainActivity extends AppCompatActivity implements Handler.Callback,MyOnItemClick, SearchView.OnQueryTextListener{
     public MyAdapter myAdapter ;
     private List<Noticia> noticias = new ArrayList<>();
     private static MainActivity instance;
@@ -107,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
         if(msg.arg1 == 1) {
 
             noticias = PaserXML.parserXml(msg.obj.toString());
-            myAdapter = new MyAdapter(noticias, handler);
+            myAdapter = new MyAdapter(noticias, this,handler);
             rvNoticias.setAdapter(myAdapter);
             myAdapter.setNoticias(noticias);
             myAdapter.notifyDataSetChanged();
@@ -127,5 +124,19 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback,
             t1.start();
         }
 
+    }
+
+    @Override
+    public void onItemClick(String link) {
+        Log.d("TAG_LINK", link);
+        Intent i = new Intent(this, DescriptionActivity.class);
+        i.putExtra("url", link);
+        startActivity(i);
+    }
+
+    @Override
+    protected void onStop() {
+        this.myAdapter.getT1().interrupt();
+        super.onStop();
     }
 }
