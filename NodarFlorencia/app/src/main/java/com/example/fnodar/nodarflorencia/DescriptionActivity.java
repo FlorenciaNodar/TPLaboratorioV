@@ -15,7 +15,7 @@ public class DescriptionActivity extends AppCompatActivity implements ImageButto
     private WebView webView;
     ImageButton fab;
     Intent intent;
-
+    String url;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
@@ -29,7 +29,7 @@ public class DescriptionActivity extends AppCompatActivity implements ImageButto
         intent = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.description_activity);
-        String url = this.getIntent().getStringExtra("url");
+        url = intent.getStringExtra("url");
         this.webView = (WebView) findViewById(R.id.webViewNoticia);
         WebSettings ws = this.webView.getSettings();
         ws.setJavaScriptEnabled(true);
@@ -46,7 +46,7 @@ public class DescriptionActivity extends AppCompatActivity implements ImageButto
         if(v.getId() == fab.getId()){
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "Quiero compartirte esta noticia: \n" + intent.getExtras().getString("url"));
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Quiero compartirte esta noticia: \n" + url);
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         }
